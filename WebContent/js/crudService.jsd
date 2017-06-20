@@ -1,0 +1,54 @@
+'use strict';
+app.factory("es3Service", function($q,$http,$window,ERDEMIR_ENDPOINT,Utils,$translate,toaster) {
+	
+	function isEmriListesiDurumGuncelle(coll,params){
+		return httpCall("POST",coll,params,"isEmriBobinService/isEmriListesiDurumGuncelle","isEmriListesiDurumGuncelle");
+	}
+	 
+	function httpCall(method,data,params,url,serviceName){
+		var deferred = $q.defer();
+		
+		$http({
+			method: method,
+			url: ERDEMIR_ENDPOINT + url,
+			params:params,
+			data: data
+		}).then(function success(response) {
+			console.log(serviceName + " success");
+			
+			var mess = "";
+			if (!Utils.getValue(response.data.hataMesaji)) {
+//				mess = $translate.instant("HATA.MESAJI.HATA-0016");
+			}else{
+				mess = response.data.hataMesaji;
+			}
+			
+			if (response.data.returnValue == 0) {
+				if(Utils.isNotBlank(mess)){
+					toaster.pop('info', $translate.instant('BASLIK.MESAJI.BASLIK-0002'), mess);	
+				}
+				if(response.data.returnObject != null){
+					deferred.resolve(response.data.returnObject);
+				}else{
+					deferred.reject(mess);
+				}
+				
+			}else{
+				toaster.pop('error', $translate.instant('BASLIK.MESAJI.BASLIK-0001'), mess);
+				deferred.reject(mess);
+			}
+		}, function(response) {
+			console.log(serviceName + " error");
+			toaster.pop('error', $translate.instant('BASLIK.MESAJI.BASLIK-0001'), response.statusText);
+			deferred.reject(response.statusText);
+		});
+		
+		return deferred.promise;
+	}
+	
+	return{
+		getVersion:getVersion,
+		
+	};
+	
+});

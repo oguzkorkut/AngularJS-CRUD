@@ -1,20 +1,23 @@
 'use strict';
-crudApp.service("crudService", function(cacheService) {
+crudApp.service("crudService", function(crudRestService) {
 	
 	function kaydet(kullanici) {
-		return cacheService.kaydet(kullanici);
+		return crudRestService.kaydet(kullanici);
 	}
 	
 	function sil(id) {
-		return cacheService.sil(id);
+		return crudRestService.sil(id);
 	}
 	
 	function guncelle(kullanici) {
-		return cacheService.guncelle(kullanici);
+		return crudRestService.guncelle(kullanici);
 	}
 	
 	function kullaniciGetir(id) {
-		return cacheService.kullaniciGetir(id);
+		var params = {
+				id: id
+		};
+		return crudRestService.getKullaniciById(params);
 	}
 	
 	return{
@@ -22,12 +25,9 @@ crudApp.service("crudService", function(cacheService) {
 		sil : sil,
 		guncelle:guncelle,
 		kullaniciListesiGetir : function(){
-			return cacheService.kullaniciListesiGetir();
+			return crudRestService.getKullanicilar();
 		},
-		kullaniciGetir:kullaniciGetir,
-		listeyiBosalt:function(){
-			cacheService.listeyiBosalt();
-		}
+		kullaniciGetir:kullaniciGetir
 	};
 	
 });

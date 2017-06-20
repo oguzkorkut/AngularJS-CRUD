@@ -12,15 +12,19 @@ crudApp.controller("KaydetController", function($scope,crudService,$state) {
 	
 	$scope.submitForm = function(){
 		if ($scope.kullaniciForm.$valid) {
-			var id = crudService.kaydet($scope.kullanici);
+			var promise = crudService.kaydet($scope.kullanici);
 			
-			console.log("Kaydedilen kullanici id:" + id);
+			promise.then(function(response) {
+				var id = response;
+				console.log("Kaydedilen kullanici id:" + id);
+				$state.go('kullaniciListesi');
+			}, function(reason) {
+				console.log("Hata:" + reason)
+			});
 			
-			$state.go('kullaniciListesi');
 		}else{
-			console.log("Form valid değil")
+			console.log("Form valid değil");
 		}
-		
 	}
 	
 	$scope.geriDon = function() {
@@ -31,7 +35,7 @@ crudApp.controller("KaydetController", function($scope,crudService,$state) {
 
 crudApp.controller("KullaniciListesiController",function($scope,crudService,$state){
 	
-	$scope.kullaniciListesi = crudService.kullaniciListesiGetir();
+	callGetKullanicilar();
 	
 	$scope.yeniKayit = function() {
 		$state.go("kaydet");
@@ -39,8 +43,16 @@ crudApp.controller("KullaniciListesiController",function($scope,crudService,$sta
 	
 	//Tabloda bulunan kayıtların güncellenmesi silinmesi ve detayın görüntülenmesi
 	$scope.sil = function($index,kullanici){
-		crudService.sil(kullanici.id);
-		$scope.kullaniciListesi = crudService.kullaniciListesiGetir();
+		
+		var promise = crudService.sil(kullanici.id);
+		
+		promise.then(function(response) {
+			$scope.kullaniciListesi  = response;
+			
+			callGetKullanicilar();
+		}, function(reason) {
+			console.log("Hata:" + reason)
+		});
 	}
 	
 	/**
@@ -55,6 +67,16 @@ crudApp.controller("KullaniciListesiController",function($scope,crudService,$sta
 		$state.go("detay",{id:kullanici.id});
 	}
 	
+	function callGetKullanicilar(){
+		var promise = crudService.kullaniciListesiGetir();
+		
+		promise.then(function(response) {
+			$scope.kullaniciListesi  = response;
+		}, function(reason) {
+			console.log("Hata:" + reason)
+		});
+	}
+	
 });
 
 crudApp.controller("GuncelleController",function($scope,crudService,$state,$stateParams){
@@ -67,14 +89,26 @@ crudApp.controller("GuncelleController",function($scope,crudService,$state,$stat
 	
 	console.log("Güncellenecek kayıt id:" + $stateParams.id);
 	
-	$scope.kullanici = crudService.kullaniciGetir($stateParams.id);
+	var promiseKullaniciGetir = crudService.kullaniciGetir($stateParams.id);
+	
+	promiseKullaniciGetir.then(function(response) {
+		$scope.kullanici  = response;
+	}, function(reason) {
+		console.log("Hata:" + reason)
+	});
+	
 	/**
 	 * Kaydet sayfasındaki güncelle butonu. Kaydın serviste bulunan değerini güncelliyor 
 	 */
 	$scope.submitForm = function () {
 		if ($scope.kullaniciForm.$valid) {
-			crudService.guncelle($scope.kullanici);
-			$state.go("kullaniciListesi");
+			var promiseGuncelle = crudService.guncelle($scope.kullanici);
+			
+			promiseGuncelle.then(function(response) {
+				$state.go("kullaniciListesi");
+			}, function(reason) {
+				console.log("Hata:" + reason)
+			});
 		}else{
 			console.log("Form valid değil")
 		}
@@ -95,7 +129,13 @@ crudApp.controller("DetayController",function($scope,crudService,$state,$statePa
 	
 	console.log("Detayı görüntülenecek kayıt id:" + $stateParams.id);
 	
-	$scope.kullanici = crudService.kullaniciGetir($stateParams.id);
+	var promise = crudService.kullaniciGetir($stateParams.id);
+	
+	promise.then(function(response) {
+		$scope.kullanici = response;
+	}, function(reason) {
+		console.log("Hata:" + reason)
+	});
 	
 	$scope.geriDon = function() {
 		$state.go("kullaniciListesi");
