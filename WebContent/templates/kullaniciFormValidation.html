@@ -1,0 +1,35 @@
+<div class="container">
+	<div class="row">
+		<h1>{{baslik}}</h1>
+		<form name="kullaniciForm" ng-submit="submitForm()" novalidate>
+			<div class="form-group"
+				ng-class="{ 'has-error' : kullaniciForm.adi.$invalid && !kullaniciForm.adi.$pristine }">
+				
+				<label for="adi">Adı</label> 
+				<input type="text" class="form-control" id="adi" name="adi" placeholder="Adı" 
+					ng-model="kullanici.adi" ng-readonly="detayMi" required>
+				<p ng-show="kullaniciForm.adi.$invalid && !kullaniciForm.adi.$pristine" class="help-block">Zorunlu alan.</p>
+			</div>
+			<div class="form-group"
+				ng-class="{ 'has-error' : kullaniciForm.soyadi.$invalid && !kullaniciForm.soyadi.$pristine }">
+
+				<label for="adi">Soyadı</label> 
+				<input type="text" class="form-control" id="soyadi" name="soyadi" placeholder="Soyadı" 
+					ng-model="kullanici.soyadi" ng-disabled="detayMi" required>
+				<p ng-show="kullaniciForm.soyadi.$invalid && !kullaniciForm.soyadi.$pristine" class="help-block">Zorunlu alan.</p>
+			</div>
+			
+			<div class="form-group"
+				ng-class="{ 'has-error' : kullaniciForm.ePosta.$invalid && !kullaniciForm.ePosta.$pristine }">
+				<label for="adi">E-Posta</label> 
+				<input type="email" class="form-control" id="ePosta" name="ePosta" placeholder="E-Posta" 
+					ng-model="kullanici.ePosta" ng-readonly="detayMi" required>
+				<p ng-show="kullaniciForm.ePosta.$invalid  && !kullaniciForm.ePosta.$pristine"
+					class="help-block">Uygun bir e-posta adresi giriniz.</p>
+			</div>
+			
+			<button type="submit" class="btn btn-primary" ng-disabled="kullaniciForm.$invalid" ng-show="!detayMi">{{buttonValue}}</button>
+			<button class="btn btn-success" ng-click="geriDon();">Geri Dön</button>
+		</form>
+	</div>
+</div>

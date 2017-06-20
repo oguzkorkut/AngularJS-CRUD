@@ -1,0 +1,7 @@
+target/*
+/target/*
+/.settings/*
+.settings/*
+/docs/extdocs/*
+../.settings/*
+Angular-CRUD/**/target/*

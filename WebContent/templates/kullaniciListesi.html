@@ -1,0 +1,29 @@
+<div class="container">
+	<div class="row">
+		<h1>Kullanıcı Listesi</h1> <button type="button" class="btn btn-success" ng-click="yeniKayit();">Yeni Kayıt</button>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Adi</th>
+					<th>Soyadi</th>
+					<th>E-Posta</th>
+					<th>-</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="kullanici in kullaniciListesi">
+					<td>{{kullanici.id}}</td>
+					<td>{{kullanici.adi}}</td>
+					<td>{{kullanici.soyadi}}</td>
+					<td>{{kullanici.ePosta}}</td>
+					<td style="width: 250px">
+						<button type="button" class="btn btn-link" ng-click="sil($index,kullanici);" style="color: red">Sil</button> |
+						<button type="button" class="btn btn-link" ng-click="guncelle($index,kullanici);" style="color: green;">Güncelle</button> |
+						<button type="button" class="btn btn-link" ng-click="detay($index,kullanici);" style="color: blue">Detay</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

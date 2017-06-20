@@ -1,0 +1,1 @@
+var crudApp = angular.module("crudApp", ["ui.router","LocalStorageModule"]);
